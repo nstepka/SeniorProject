@@ -10,26 +10,51 @@ from dowhy import CausalModel
 # Load the data
 df = pd.read_csv(r"C:\Users\nstep\TSU\SeniorProject\AirbnbDataCleanedModel428.csv")
 
+# Organizing columns by categories
+category_dict = {
+    "General Amenities": ['24-hour check-in', 'Essentials', 'Heating', 'Air conditioning', 'Internet', 'Wireless internet', 'Cable TV', 'TV', 'Game console', 'Laptop friendly workspace', 'Buzzer/wireless intercom', 'Lockbox', 'Private entrance', 'Private living room', 'Self check-in', 'Keypad', 'Lock on bedroom door', 'Family/kid friendly', 'Suitable for events', 'Long term stays allowed', 'Room-darkening shades'],
+    "Kitchen Amenities": ['Kitchen', 'Coffee maker', 'Cooking basics', 'Dishes and silverware', 'Dishwasher', 'Microwave', 'Refrigerator', 'Oven', 'Stove', 'BBQ grill', 'Breakfast'],
+    "Safety Features": ['Carbon monoxide detector', 'Fire extinguisher', 'First aid kit', 'Smoke detector', 'Safety card', 'Fireplace guards', 'Window guards', 'Fire alarm', 'Firm mattress'],
+    "Accessibility Features": ['Accessible-height bed', 'Accessible-height toilet', 'Disabled parking spot', 'Firm matress', 'Flat smooth pathway to front door', 'Grab-rails for shower and toilet', 'Step-free access', 'Tub with shower bench', 'Wheelchair accessible', 'Wide clearance to bed', 'Wide clearance to shower and toilet', 'Wide doorway', 'Wide hallway clearance', 'Elevator in building'],
+    "Parking and Building": ['Doorman', 'Doorman entry', 'Free parking on premises', 'Free parking on street', 'Paid parking off premises', 'Gym', 'Pool', 'Hot tub', 'Garden or backyard', 'Patio or balcony'],
+    "Child Friendly Amenities": ['Baby bath', 'Baby monitor', 'Babysitter recommendations', 'Changing table', 'Children’s books and toys', 'Children’s dinnerware', 'Crib', 'High chair', 'Pack ’n play/travel crib', 'Stair gates', 'Table corner guards', 'Outlet covers'],
+    "Laundry": ['Dryer', 'Washer', 'Washer / dryer', 'Iron'],
+    "Pets": ['Cat(s)', 'Dog(s)', 'Pets allowed', 'Pets live on this property', 'Other pet(s)'],
+    "Bathroom Amenities": ['Bathtub', 'Hair dryer', 'Shampoo', 'Hot water', 'Bathrooms'],
+    "Bedroom Amenities": ['Bed linens', 'Bedrooms', 'Beds', 'Hangers', 'Extra pillows and blankets'],
+    "Others": ['Indoor fireplace', 'Smoking allowed', 'Luggage dropoff allowed', 'Extra people', 'Path to entrance lit at night', 'Pocket wifi', 'Accommodates', 'Maximum nights', 'Minimum nights', 'Number of reviews', 'Price', 'Cleaning fee', 'Cleaning before checkout', 'Guests included', 'Translation missing: en.hosting_amenity_49', 'Translation missing: en.hosting_amenity_50']
+}
+
+##make sure all of category_dict is lower case
+for key in category_dict:
+    category_dict[key] = [x.lower() for x in category_dict[key]]
+        
 # Create the main window
 root = tk.Tk()
 root.title("Airbnb Price Predictor")
 
 # Create a frame for the input fields
-input_frame = ttk.LabelFrame(root, text="Property Conditions", padding=(10, 5))
-input_frame.grid(padx=10, pady=10, sticky="ew")
+input_frame = ttk.LabelFrame(root, text="Property Conditions", padding=(5, 5))
+input_frame.grid(padx=5, pady=5, sticky="ew")
 
 # Create input fields based on the columns in the dataframe
 input_fields = {}
-columns_except_price = [col for col in df.columns if col != "price"]
-for i, column in enumerate(columns_except_price):
-    row = i // 4
-    col = (i % 4) * 2  # Every second column contains an Entry widget
-    
-    # Create label and entry for the column
-    ttk.Label(input_frame, text=column).grid(row=row, column=col, sticky="w", padx=5, pady=2)
-    input_field = ttk.Entry(input_frame)
-    input_field.grid(row=row, column=col+1, padx=5, pady=2)
-    input_fields[column] = input_field
+row_counter = 0
+for category, columns in category_dict.items():
+    ttk.Label(input_frame, text=category, font=("Arial", 12, "bold")).grid(row=row_counter, column=0, sticky="w", padx=5, pady=5, columnspan=8)
+    row_counter += 1
+    col_counter = 0
+    for column in columns:
+        if column in df.columns and column != "price":  # Check if column is in dataframe and is not 'price'
+            col = col_counter % 5 * 2
+            ttk.Label(input_frame, text=column).grid(row=row_counter, column=col, sticky="w", padx=5, pady=2)
+            input_field = ttk.Entry(input_frame, width=5)
+            input_field.grid(row=row_counter, column=col + 1, padx=5, pady=2)
+            input_fields[column] = input_field
+            if col == 5:
+                row_counter += 1
+            col_counter += 1
+    row_counter += 1
 
 # Define the predict_price function
 # Define the predict_price function
@@ -109,3 +134,4 @@ predicted_price_label = ttk.Label(root, text="Predicted Price: $0")
 predicted_price_label.grid(row=2, column=0, pady=10)
 
 root.mainloop()
+
