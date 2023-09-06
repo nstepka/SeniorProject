@@ -1,0 +1,136 @@
+bathrooms increases bedrooms with weight 1.436
+bathrooms increases cable tv with weight 0.183
+bathrooms increases cleaning fee with weight 0.868
+bathrooms increases gym with weight 0.025
+bathrooms increases hot tub with weight 0.159
+bathrooms increases indoor fireplace with weight 0.340
+bathrooms decreases pets allowed with weight -0.010
+bathrooms increases pool with weight 0.183
+bathrooms increases price with weight 0.703
+bathrooms increases washer with weight 0.351
+bathrooms increases dryer with weight 0.347
+bathrooms increases accommodates with weight 1.139
+beds increases cable tv with weight 0.041
+beds increases cleaning fee with weight 0.355
+beds increases extra people with weight 0.030
+beds increases kitchen with weight 0.021
+beds increases pets allowed with weight 0.091
+beds increases accommodates with weight 1.055
+bedrooms increases beds with weight 1.555
+bedrooms increases cable tv with weight 0.025
+bedrooms increases cleaning fee with weight 0.589
+bedrooms increases kitchen with weight 0.066
+bedrooms increases price with weight 0.430
+bedrooms increases washer with weight 0.089
+bedrooms increases accommodates with weight 1.467
+cable tv increases cleaning fee with weight 0.288
+cable tv increases hot tub with weight 0.038
+cable tv increases indoor fireplace with weight 0.069
+cable tv increases internet with weight 0.229
+cable tv increases price with weight 0.117
+cable tv increases dryer with weight 0.016
+cable tv increases wireless internet with weight 0.011
+cleaning fee increases hot tub with weight 0.040
+cleaning fee increases indoor fireplace with weight 0.091
+cleaning fee increases internet with weight 0.058
+cleaning fee increases kitchen with weight 0.047
+cleaning fee increases price with weight 0.413
+cleaning fee increases washer with weight 0.066
+cleaning fee increases dryer with weight 0.070
+extra people increases internet with weight 0.067
+extra people decreases price with weight -0.053
+gym increases hot tub with weight 0.084
+gym increases tv with weight 0.087
+indoor fireplace increases hot tub with weight 0.074
+internet increases wireless internet with weight 0.036
+pets allowed increases extra people with weight 0.016
+pets allowed increases hot tub with weight 0.031
+pets allowed increases indoor fireplace with weight 0.033
+pets allowed increases kitchen with weight 0.011
+pool increases extra people with weight 0.033
+pool increases hot tub with weight 0.285
+pool increases indoor fireplace with weight 0.156
+price increases hot tub with weight 0.042
+price increases indoor fireplace with weight 0.079
+price increases internet with weight 0.033
+tv increases cable tv with weight 0.068
+tv increases internet with weight 0.133
+tv increases kitchen with weight 0.015
+tv increases dryer with weight 0.023
+washer increases indoor fireplace with weight 0.112
+washer increases internet with weight 0.088
+washer increases kitchen with weight 0.088
+washer increases pets allowed with weight 0.093
+washer increases dryer with weight 0.950
+washer increases wireless internet with weight 0.019
+accommodates increases extra people with weight 0.031
+accommodates increases pool with weight 0.034
+accommodates increases price with weight 0.233
+accommodates increases tv with weight 0.158
+24-hour check-in  internet with weight 
+accommodates  beds with weight 
+accommodates  bedrooms with weight 
+accommodates  bathrooms with weight 
+accommodates  cleaning fee with weight 
+accommodates  guests included with weight 
+accommodates  price with weight 
+accommodates  suitable for events with weight 
+accommodates  dryer with weight 
+accommodates  washer with weight 
+accommodates  family/kid friendly with weight 
+accommodates  indoor fireplace with weight 
+bathrooms  bedrooms with weight 
+bathrooms  beds with weight 
+bathrooms  cleaning fee with weight 
+bathrooms  price with weight 
+bathrooms  indoor fireplace with weight 
+bathrooms  pool with weight 
+bathrooms  hot tub with weight 
+bathrooms  dryer with weight 
+bathrooms  washer with weight 
+bathrooms  guests included with weight 
+bathrooms  number of reviews with weight 
+bedrooms  beds with weight 
+bedrooms  cleaning fee with weight 
+bedrooms  price with weight 
+bedrooms  guests included with weight 
+bedrooms  washer with weight 
+bedrooms  dryer with weight 
+bedrooms  indoor fireplace with weight 
+bedrooms  number of reviews with weight 
+bedrooms  family/kid friendly with weight 
+bedrooms  suitable for events with weight 
+bedrooms  pool with weight 
+bedrooms  hot tub with weight 
+beds  cleaning fee with weight 
+beds  guests included with weight 
+beds  price with weight 
+beds  suitable for events with weight 
+beds  dryer with weight 
+beds  family/kid friendly with weight 
+beds  washer with weight 
+beds  indoor fireplace with weight 
+cable tv  internet with weight 
+cable tv  tv with weight 
+cable tv  cleaning fee with weight 
+cleaning fee  price with weight 
+cleaning fee  guests included with weight 
+cleaning fee  pool with weight 
+cleaning fee  indoor fireplace with weight 
+cleaning fee  hot tub with weight 
+cleaning fee  dryer with weight 
+cleaning fee  washer with weight 
+dryer  washer with weight 
+dryer  kitchen with weight 
+dryer  free parking on premises with weight 
+essentials  wireless internet with weight 
+extra people  guests included with weight 
+free parking on premises  washer with weight 
+heating  wireless internet with weight 
+heating  kitchen with weight 
+hot tub  pool with weight 
+hot tub  indoor fireplace with weight 
+indoor fireplace  pool with weight 
+internet  wireless internet with weight 
+kitchen  washer with weight 
+kitchen  wireless internet with weight 

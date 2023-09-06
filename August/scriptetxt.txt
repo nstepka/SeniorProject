@@ -1,0 +1,137 @@
+import tkinter as tk
+from tkinter import ttk
+import numpy as np
+import pandas as pd
+import logging
+
+import dowhy
+from dowhy import CausalModel
+
+# Load the data
+df = pd.read_csv(r"C:\Users\nstep\TSU\SeniorProject\AirbnbDataCleanedModel428.csv")
+
+# Organizing columns by categories
+category_dict = {
+    "General Amenities": ['24-hour check-in', 'Essentials', 'Heating', 'Air conditioning', 'Internet', 'Wireless internet', 'Cable TV', 'TV', 'Game console', 'Laptop friendly workspace', 'Buzzer/wireless intercom', 'Lockbox', 'Private entrance', 'Private living room', 'Self check-in', 'Keypad', 'Lock on bedroom door', 'Family/kid friendly', 'Suitable for events', 'Long term stays allowed', 'Room-darkening shades'],
+    "Kitchen Amenities": ['Kitchen', 'Coffee maker', 'Cooking basics', 'Dishes and silverware', 'Dishwasher', 'Microwave', 'Refrigerator', 'Oven', 'Stove', 'BBQ grill', 'Breakfast'],
+    "Safety Features": ['Carbon monoxide detector', 'Fire extinguisher', 'First aid kit', 'Smoke detector', 'Safety card', 'Fireplace guards', 'Window guards', 'Fire alarm', 'Firm mattress'],
+    "Accessibility Features": ['Accessible-height bed', 'Accessible-height toilet', 'Disabled parking spot', 'Firm matress', 'Flat smooth pathway to front door', 'Grab-rails for shower and toilet', 'Step-free access', 'Tub with shower bench', 'Wheelchair accessible', 'Wide clearance to bed', 'Wide clearance to shower and toilet', 'Wide doorway', 'Wide hallway clearance', 'Elevator in building'],
+    "Parking and Building": ['Doorman', 'Doorman entry', 'Free parking on premises', 'Free parking on street', 'Paid parking off premises', 'Gym', 'Pool', 'Hot tub', 'Garden or backyard', 'Patio or balcony'],
+    "Child Friendly Amenities": ['Baby bath', 'Baby monitor', 'Babysitter recommendations', 'Changing table', 'Children’s books and toys', 'Children’s dinnerware', 'Crib', 'High chair', 'Pack ’n play/travel crib', 'Stair gates', 'Table corner guards', 'Outlet covers'],
+    "Laundry": ['Dryer', 'Washer', 'Washer / dryer', 'Iron'],
+    "Pets": ['Cat(s)', 'Dog(s)', 'Pets allowed', 'Pets live on this property', 'Other pet(s)'],
+    "Bathroom Amenities": ['Bathtub', 'Hair dryer', 'Shampoo', 'Hot water', 'Bathrooms'],
+    "Bedroom Amenities": ['Bed linens', 'Bedrooms', 'Beds', 'Hangers', 'Extra pillows and blankets'],
+    "Others": ['Indoor fireplace', 'Smoking allowed', 'Luggage dropoff allowed', 'Extra people', 'Path to entrance lit at night', 'Pocket wifi', 'Accommodates', 'Maximum nights', 'Minimum nights', 'Number of reviews', 'Price', 'Cleaning fee', 'Cleaning before checkout', 'Guests included', 'Translation missing: en.hosting_amenity_49', 'Translation missing: en.hosting_amenity_50']
+}
+
+##make sure all of category_dict is lower case
+for key in category_dict:
+    category_dict[key] = [x.lower() for x in category_dict[key]]
+        
+# Create the main window
+root = tk.Tk()
+root.title("Airbnb Price Predictor")
+
+# Create a frame for the input fields
+input_frame = ttk.LabelFrame(root, text="Property Conditions", padding=(5, 5))
+input_frame.grid(padx=5, pady=5, sticky="ew")
+
+# Create input fields based on the columns in the dataframe
+input_fields = {}
+row_counter = 0
+for category, columns in category_dict.items():
+    ttk.Label(input_frame, text=category, font=("Arial", 12, "bold")).grid(row=row_counter, column=0, sticky="w", padx=5, pady=5, columnspan=8)
+    row_counter += 1
+    col_counter = 0
+    for column in columns:
+        if column in df.columns and column != "price":  # Check if column is in dataframe and is not 'price'
+            col = col_counter % 5 * 2
+            ttk.Label(input_frame, text=column).grid(row=row_counter, column=col, sticky="w", padx=5, pady=2)
+            input_field = ttk.Entry(input_frame, width=5)
+            input_field.grid(row=row_counter, column=col + 1, padx=5, pady=2)
+            input_fields[column] = input_field
+            if col == 5:
+                row_counter += 1
+            col_counter += 1
+    row_counter += 1
+
+# Define the predict_price function
+# Define the predict_price function
+def predict_price():
+    # Display a message to inform the user that the computation is in progress
+    predicted_price_label.config(text="Computing price... Please wait.")
+
+    # Refresh the GUI to immediately reflect the above change
+    root.update_idletasks()
+
+    data_dict = {}
+    
+    # Validate and process input fields
+    for col, input_widget in input_fields.items():
+        value = input_widget.get().strip()
+        if not value:  # Check if the input is empty
+            default_value = 0.0  # or df[col].mean() if you want to use the column's mean value
+            data_dict[col] = default_value
+        else:
+            try:
+                data_dict[col] = float(value)
+            except ValueError:  # Handle invalid float values
+                ttk.Label(input_frame, text=f"Error: Invalid input for {col}!", foreground="red").grid(row=len(input_fields) // 4, column=0, columnspan=8)
+                return
+
+    # Add a placeholder for the 'price' column
+    data_dict['price'] = 0.0  # placeholder value
+    
+    # Append user's input to the original dataframe
+    modified_df = df.append(data_dict, ignore_index=True)
+    
+    # Define the outcome
+    outcome = 'price'
+    
+    # Store results in a dictionary
+    results = {}
+    
+    # Loop over all columns in the modified_df as treatments
+    for treatment in modified_df.columns:
+        if treatment != outcome:
+            common_causes = [col for col in modified_df.columns if col != treatment and col != outcome]
+            
+            # Create a causal model with the modified_df
+            model = CausalModel(
+                data=modified_df,
+                treatment=treatment,
+                outcome=outcome,
+                common_causes=common_causes,
+                logging_level=logging.INFO
+            )
+            
+            # Identify the causal effect
+            identified_estimand = model.identify_effect()
+
+            # Estimate the causal effect using the regression method
+            causal_estimate = model.estimate_effect(identified_estimand,
+                                                    method_name="backdoor.linear_regression",
+                                                    test_significance=True)
+            
+            # Store the results
+            results[treatment] = {
+                "causal_estimate": causal_estimate.value,
+                "treatment": treatment
+            }
+
+    # Update the label with the predicted price at the end
+    sorted_results = sorted(results.values(), key=lambda x: x['causal_estimate'], reverse=True)
+    predicted_price_label.config(text=f"Predicted Price: ${sorted_results[0]['causal_estimate']:.2f}")
+
+
+# Create a button to trigger the prediction
+predict_button = ttk.Button(root, text="Predict Price", command=predict_price)
+predict_button.grid(row=1, column=0, pady=10)
+
+# Create a label to display the predicted price
+predicted_price_label = ttk.Label(root, text="Predicted Price: $0")
+predicted_price_label.grid(row=2, column=0, pady=10)
+
+root.mainloop()
+
