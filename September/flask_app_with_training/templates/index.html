@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Price Prediction</title>
+</head>
+<body>
+
+<form id="prediction-form" method="post">
+    {{ form.csrf_token }}
+    {{ form.accommodates.label }}: {{ form.accommodates }}<br>
+    {{ form.bathrooms.label }}: {{ form.bathrooms }}<br>
+    {{ form.neighbourhood_cleansed_num.label }}: {{ form.neighbourhood_cleansed_num }}<br>
+    {{ form.nights_staying.label }}: {{ form.nights_staying }}<br>
+    {{ form.bedrooms.label }}: {{ form.bedrooms }}<br>
+    {{ form.fireplace.label }}: {{ form.fireplace }}<br>
+    {{ form.hot_tub.label }}: {{ form.hot_tub }}<br>
+    {{ form.cable.label }}: {{ form.cable }}<br>
+    {{ form.review_scores_value.label }}: {{ form.review_scores_value }}<br>
+    {{ form.property_type.label }}: {{ form.property_type }}<br>
+    {{ form.room_type_num.label }}: {{ form.room_type_num }}<br>
+    {{ form.submit }}
+</form>
+
+<script>
+    document.getElementById('prediction-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        var formData = new FormData(this);
+
+        fetch('/', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })        
+        .then(response => response.text())
+        .then(data => {
+            if (data) {
+                console.log('Predicted Price: $' + data);
+                alert('Predicted Price: $' + data);
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
