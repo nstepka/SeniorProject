@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <title>Predictor</title>
+</head>
+
+<body>
+    <div class="topnav">
+        <a class="active" href="{{ url_for('predictor') }}">Predictor</a>
+        <a href="{{ url_for('about') }}">About</a>
+    </div>
+
+    <form method="POST" action="{{ url_for('predictor') }}">
+        {{ form.hidden_tag() }}
+        <div class="row">
+            <div class="column">
+                {{ form.accommodates.label }}<br>
+                {{ form.accommodates(class="input-field") }}
+            </div>
+            <div class="column">
+                {{ form.bathrooms.label }}<br>
+                {{ form.bathrooms(class="input-field") }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="column">
+                {{ form.nights_staying.label }}<br>
+                {{ form.nights_staying(class="input-field") }}
+            </div>
+            <div class="column">
+                {{ form.bedrooms.label }}<br>
+                {{ form.bedrooms(class="input-field") }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="column">
+                {{ form.fireplace.label }}<br>
+                {{ form.fireplace() }}
+            </div>
+            <div class="column">
+                {{ form.hot_tub.label }}<br>
+                {{ form.hot_tub() }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="column">
+                {{ form.cable.label }}<br>
+                {{ form.cable() }}
+            </div>
+            <div class="column">
+                {{ form.wifi.label }}<br>
+                {{ form.wifi() }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="column">
+                {{ form.review_scores_value.label }}<br>
+                {{ form.review_scores_value(class="input-field") }}
+            </div>
+            <div class="column">
+                {{ form.property_type.label }}<br>
+                {{ form.property_type(class="input-field") }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="column">
+                {{ form.room_type_num.label }}<br>
+                {{ form.room_type_num(class="input-field") }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="column">
+                {{ form.submit(class="submit-button") }}
+            </div>
+        </div>
+    </form>
+
+    {% if estimated_price %}
+        <div class="results-container">
+            <div class="result">
+                Predicted Price: ${{ estimated_price }}
+            </div>
+        </div>
+    {% endif %}
+</body>
+
+</html>
