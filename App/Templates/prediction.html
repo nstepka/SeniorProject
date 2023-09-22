@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Allows for the styling of the wed page -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+
+    
+    <title>Airbnb Price Predictor</title>
+    
+</head>
+<body>
+    <!-- The tool bar on the web app -->
+    <div class="topnav">
+        <a class="active" href="{{ url_for('predictor') }}">Predictor</a>
+        <a href="{{ url_for('about') }}">About</a>
+    </div>
+
+    <h1>Airbnb Price Predictor</h1>
+    <h4>Please enter the corresponding data below.</h4>
+
+    <div class="row">
+        <form id="prediction-form" method="POST" action="{{ url_for('predictor') }}">
+            <div class="column">
+
+                    {{ form.accommodates.label() }}<br>{{ form.accommodates() }}<br>
+
+                    {{ form.bathrooms.label() }}<br>{{ form.bathrooms() }}<br>
+
+                    {{ form.neighbourhood_cleansed_num.label() }}<br>{{ form.neighbourhood_cleansed_num() }}<br>
+
+                    {{ form.nights_staying.label() }}<br>{{ form.nights_staying() }}<br>
+
+                    {{ form.bedrooms.label() }}<br>{{ form.bedrooms() }}<br>
+            </div>
+            
+            <div class="column">
+
+                    {{ form.fireplace.label() }}<br>{{ form.fireplace() }}<br>
+                    
+                    {{ form.hot_tub.label() }}<br>{{ form.hot_tub() }}<br>
+
+                    {{ form.cable.label() }}<br>{{ form.cable() }}<br>
+
+                    {{ form.review_scores_value.label() }}<br>{{ form.review_scores_value() }}<br>
+
+                    {{ form.property_type.label() }}<br>{{ form.property_type() }}<br>
+
+                    {{ form.room_type_num.label() }}<br>{{ form.room_type_num() }}<br>
+            </div>
+            
+            {{ form.submit() }}
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('prediction-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+    
+            var formData = new FormData(this);
+    
+            fetch('/predictor', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })        
+            .then(response => response.json())
+            .then(data => {
+                if (data) {
+                    console.log('Predicted Price: $' + data.estimated_price);
+                    console.log('MAE: $' + data.mae);
+                    window.location.href = `/price?estimated_price=${data.estimated_price}&mae=${data.mae}`;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
