@@ -34,7 +34,7 @@
     <div style="text-align: center; margin-top: 20px;">
         {% for prop in recommended_properties.iterrows() %}
             <div>
-                Property ID: {{ prop[1]['id']|int }}
+                <a href="https://www.airbnb.com/rooms/{{ prop[1]['id']|int }}">Property ID: {{ prop[1]['id']|int }}</a>
             </div>
         {% endfor %}
     </div>
