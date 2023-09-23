@@ -11,6 +11,7 @@ import warnings
 from sklearn.exceptions import DataConversionWarning
 from sklearn.model_selection import train_test_split
 warnings.filterwarnings(action='ignore', category=UserWarning, module='sklearn')
+import numpy as np
 
 app = Flask(__name__, static_folder='Statics')
 app.config['SECRET_KEY'] = 'wdazD1dRmBGVwVSi'
@@ -67,6 +68,11 @@ class PredictionForm(FlaskForm):
         (2, 'Private Room')
     ])
     submit = SubmitField('Predict Price')
+
+# Euclidean distance function
+def compute_distance(data1, data2):
+    return np.sqrt(np.sum((data1 - data2) ** 2))
+
     
 # Route to the Prediction Model Page
 @app.route('/predictor', methods=['GET', 'POST'])
@@ -112,6 +118,7 @@ def predictor():
             del prepared_data['submit']
 
         # Now, let's filter the nashvilleDF dataframe based on the user's criteria:
+
 
         # Start with the entire dataset and filter it step by step
         filtered_properties = nashvilleDF.copy()
@@ -159,15 +166,34 @@ def predictor():
             filtered_properties = filtered_properties[filtered_properties['room_Private room'] == 1]
 
 
+        # Before creating the user_vector, convert all boolean values to integers
+        for key, value in prepared_data.items():
+            if isinstance(value, bool):
+                prepared_data[key] = int(value)
+
+        # Create a feature vector for the user's input based on the order of columns in nashvilleDF
+        feature_columns = list(nashvilleDF.drop(['price', 'id'], axis=1).columns)
+        user_vector = np.array([prepared_data[col] for col in feature_columns])
+
+        # Convert user_vector to float
+        user_vector = user_vector.astype(float)
+
+        print("User Vector:", user_vector)
+        print("Data Types in Filtered Properties:", filtered_properties.dtypes)
+
+        # Calculate distances for each property in the filtered dataset
+        filtered_properties['distance'] = filtered_properties.apply(
+            lambda row: compute_distance(user_vector, np.array(row[feature_columns].values, dtype=float)), axis=1)
+
+
+        
+        # Recommend properties that are closest to the user's preferences
+        recommended_properties = filtered_properties.sort_values(by='distance').head(5)
 
         # Predict the price using the trained model
         try:
             estimated_price = trained_model.predict([list(prepared_data.values())])[0]
             estimated_price = round(estimated_price, 2)
-
-            recommended_properties = filtered_properties.sort_values(by='review_scores_value', ascending=False).head(5)
-            
-           
 
             return render_template('price.html', 
                        estimated_price=estimated_price, 
@@ -178,7 +204,6 @@ def predictor():
             print(f"Error during prediction: {str(e)}")
 
     return render_template('prediction.html', title='Prediction Model', form=form, estimated_price=estimated_price)
-
 
 
 @app.route('/price')
