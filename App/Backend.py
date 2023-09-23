@@ -195,10 +195,23 @@ def predictor():
             estimated_price = trained_model.predict([list(prepared_data.values())])[0]
             estimated_price = round(estimated_price, 2)
 
+            # Define price range based on MAE
+            lower_bound = estimated_price - mae
+            upper_bound = estimated_price + mae
+
+            # Filter properties based on the price range
+            filtered_properties = filtered_properties[
+                (filtered_properties['price'] >= lower_bound) & 
+                (filtered_properties['price'] <= upper_bound)
+            ]
+
+            # Recommend properties that are closest to the user's preferences
+            recommended_properties = filtered_properties.sort_values(by='distance').head(5)
+
             return render_template('price.html', 
-                       estimated_price=estimated_price, 
-                       mae=round(mae, 2), 
-                       recommended_properties=recommended_properties)
+                   estimated_price=estimated_price, 
+                   mae=round(mae, 2), 
+                   recommended_properties=recommended_properties)
 
         except Exception as e:
             print(f"Error during prediction: {str(e)}")
