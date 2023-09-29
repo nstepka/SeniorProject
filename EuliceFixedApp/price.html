@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Allows for the styling of the web page -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='Styles/style.css') }}">
+
+    <title>Airbnb Price Result</title>
+</head>
+<body>
+    <!-- The tool bar on the web app -->
+    <div class="topnav">
+        <a href="{{ url_for('predictor') }}">Predictor</a>
+        <a href="{{ url_for('about') }}">About</a>
+    </div>
+
+    <div class="price-container">
+        <div class="price-content">
+            <p>Predicted Price: ${{ estimated_price }}</p>
+            <p>MAE: ${{ mae }} (This indicates the average deviation of the predicted price from actual prices. A lower value means the prediction is more accurate.)</p>
+        </div>
+    
+    
+        <div class="recommendations">
+            <!-- Your code to list the recommended Airbnb properties goes here -->
+        </div>
+    </div>
+
+    <hr> 
+    <h2 style="text-align: center;">Recommended Airbnb Listings:</h2>
+    <div style="text-align: center; margin-top: 20px;">
+        {% for prop in recommended_properties.iterrows() %}
+            <div>
+                Property ID: {{ prop[1]['id']|int }}
+                <a href="https://www.airbnb.com/rooms/{{ prop[1]['id']|int }}">Property ID: {{ prop[1]['id']|int }}</a>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
